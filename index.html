@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Battery Status Demo</title>
+</head>
+<body>
+  <h1>Battery Status</h1>
+  <p id="battery-status"></p>
+
+  <script>
+    window.addEventListener('DOMContentLoaded', function() {
+      var batteryStatusElement = document.getElementById('battery-status');
+
+      if ('navigator' in window && 'getBattery' in navigator) {
+        navigator.getBattery().then(function(battery) {
+          updateBatteryStatus(battery);
+          battery.addEventListener('levelchange', function() {
+            updateBatteryStatus(battery);
+          });
+          battery.addEventListener('chargingchange', function() {
+            updateBatteryStatus(battery);
+          });
+        });
+      } else {
+        batteryStatusElement.textContent = 'Battery API not supported in this browser.';
+      }
+
+      function updateBatteryStatus(battery) {
+        var batteryLevel = Math.floor(battery.level * 100);
+        var chargingStatus = battery.charging ? 'Charging' : 'Not Charging';
+
+        batteryStatusElement.textContent = 'Battery level: ' + batteryLevel + '% | ' + chargingStatus;
+      }
+    });
+  </script>
+</body>
+</html>
